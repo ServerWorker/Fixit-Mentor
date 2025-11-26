@@ -41,8 +41,21 @@ export default function Homepage() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 bg-gradient-subtle">
-        <div className="container mx-auto max-w-6xl text-center">
+      <section className="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 bg-gradient-subtle overflow-hidden">
+        {/* Spline 3D Orb Background */}
+        <div className="absolute inset-0 flex items-center justify-center opacity-40 pointer-events-none">
+          <div className="w-full h-full max-w-2xl max-h-2xl">
+            <iframe 
+              src='https://my.spline.design/orb-nRggrwiCPbiWf6wn548YA5Pt/' 
+              frameBorder='0' 
+              width='100%' 
+              height='100%'
+              className="w-full h-full"
+            />
+          </div>
+        </div>
+        
+        <div className="container mx-auto max-w-6xl text-center relative z-10">
           <div className="inline-block mb-6 px-4 py-2 bg-primary/10 rounded-full text-primary text-sm font-medium animate-fade-in">
             Better Than Normal AI
           </div>
