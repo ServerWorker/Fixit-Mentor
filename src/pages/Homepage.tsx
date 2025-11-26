@@ -43,16 +43,14 @@ export default function Homepage() {
       {/* Hero Section */}
       <section className="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 bg-gradient-subtle overflow-hidden">
         {/* Spline 3D Orb Background */}
-        <div className="absolute inset-0 flex items-center justify-center opacity-40 pointer-events-none">
-          <div className="w-full h-full max-w-2xl max-h-2xl">
-            <iframe 
-              src='https://my.spline.design/orb-nRggrwiCPbiWf6wn548YA5Pt/' 
-              frameBorder='0' 
-              width='100%' 
-              height='100%'
-              className="w-full h-full"
-            />
-          </div>
+        <div className="absolute inset-0 flex items-center justify-center opacity-40 pointer-events-none overflow-hidden">
+          <iframe 
+            src='https://my.spline.design/orb-nRggrwiCPbiWf6wn548YA5Pt/' 
+            frameBorder='0' 
+            width='100%' 
+            height='100%'
+            className="w-full h-full scale-150"
+          />
         </div>
         
         <div className="container mx-auto max-w-6xl text-center relative z-10">
