@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -6,15 +7,13 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Recycle, Sparkles, Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import ReactMarkdown from "react-markdown";
 
 export default function SystemPage() {
+  const navigate = useNavigate();
   const [wasteItem, setWasteItem] = useState("");
   const [budget, setBudget] = useState("");
   const [otherInfo, setOtherInfo] = useState("");
-  const [response, setResponse] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
 
   const handleGenerate = async () => {
     // Validation
@@ -28,20 +27,40 @@ export default function SystemPage() {
     }
 
     setLoading(true);
-    setError("");
-    setResponse("");
 
     try {
-      // TODO: Replace with actual API call to /api/recycle
-      // For now, simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      // TODO: Replace with your actual backend URL
+      const response = await fetch("https://YOUR-BACKEND-URL/recycle", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          waste_item: wasteItem,
+          budget: budget,
+          other_info: otherInfo,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to generate plan");
+      }
+
+      const data = await response.json();
       
-      // Placeholder response - will be replaced with actual Gemini response
-      setResponse("# API Integration Pending\n\nThe backend will be connected in the next step.");
+      // Redirect to response page with the data
+      navigate("/response", { 
+        state: { 
+          response: data.response,
+          wasteItem,
+          budget,
+          otherInfo
+        } 
+      });
+      
       toast.success("Response generated!");
     } catch (err) {
-      setError("Failed to generate plan. Please try again.");
-      toast.error("Something went wrong");
+      toast.error("Failed to generate plan. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -135,67 +154,6 @@ export default function SystemPage() {
           </div>
         </Card>
 
-        {/* Error Display */}
-        {error && (
-          <Card className="p-6 mb-8 bg-destructive/10 border-destructive/50 animate-fade-in">
-            <p className="text-destructive text-center">{error}</p>
-          </Card>
-        )}
-
-        {/* Response Display */}
-        {response && (
-          <Card className="p-8 bg-gradient-card shadow-soft animate-fade-in">
-            <div className="prose prose-slate dark:prose-invert max-w-none">
-              <ReactMarkdown
-                components={{
-                  h1: ({ node, ...props }) => (
-                    <h1 className="text-3xl font-bold mb-4 text-foreground" {...props} />
-                  ),
-                  h2: ({ node, ...props }) => (
-                    <h2 className="text-2xl font-bold mt-8 mb-3 text-foreground" {...props} />
-                  ),
-                  h3: ({ node, ...props }) => (
-                    <h3 className="text-xl font-semibold mt-6 mb-2 text-foreground" {...props} />
-                  ),
-                  p: ({ node, ...props }) => (
-                    <p className="mb-4 text-foreground leading-relaxed" {...props} />
-                  ),
-                  ul: ({ node, ...props }) => (
-                    <ul className="list-disc list-inside mb-4 space-y-2 text-foreground" {...props} />
-                  ),
-                  ol: ({ node, ...props }) => (
-                    <ol className="list-decimal list-inside mb-4 space-y-2 text-foreground" {...props} />
-                  ),
-                  li: ({ node, ...props }) => (
-                    <li className="text-foreground" {...props} />
-                  ),
-                  strong: ({ node, ...props }) => (
-                    <strong className="font-bold text-primary" {...props} />
-                  ),
-                  table: ({ node, ...props }) => (
-                    <div className="overflow-x-auto my-6">
-                      <table className="w-full border-collapse border border-border" {...props} />
-                    </div>
-                  ),
-                  thead: ({ node, ...props }) => (
-                    <thead className="bg-muted" {...props} />
-                  ),
-                  th: ({ node, ...props }) => (
-                    <th className="border border-border px-4 py-2 text-left font-semibold text-foreground" {...props} />
-                  ),
-                  td: ({ node, ...props }) => (
-                    <td className="border border-border px-4 py-2 text-foreground" {...props} />
-                  ),
-                  a: ({ node, ...props }) => (
-                    <a className="text-primary hover:underline" target="_blank" rel="noopener noreferrer" {...props} />
-                  ),
-                }}
-              >
-                {response}
-              </ReactMarkdown>
-            </div>
-          </Card>
-        )}
       </div>
     </div>
   );
