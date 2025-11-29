@@ -28,6 +28,8 @@ export default function SystemPage() {
 
     setLoading(true);
 
+    let geminiResponse = "";
+
     try {
       // TODO: Replace with your actual backend URL
       const response = await fetch("https://YOUR-BACKEND-URL/recycle", {
@@ -42,27 +44,28 @@ export default function SystemPage() {
         }),
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to generate plan");
+      if (response.ok) {
+        const data = await response.json();
+        geminiResponse = data.response || "";
+        toast.success("Response generated!");
+      } else {
+        toast.error("Failed to generate plan, but redirecting anyway");
       }
-
-      const data = await response.json();
-      
-      // Redirect to response page with the data
-      navigate("/response", { 
-        state: { 
-          response: data.response,
-          wasteItem,
-          budget,
-          otherInfo
-        } 
-      });
-      
-      toast.success("Response generated!");
     } catch (err) {
-      toast.error("Failed to generate plan. Please try again.");
+      toast.error("API error occurred, redirecting to response page");
     } finally {
       setLoading(false);
+      
+      // Always redirect to response page, even if API fails
+      navigate("/response", { 
+        state: { 
+          response: geminiResponse,
+          wasteItem,
+          budget,
+          otherInfo,
+          error: !geminiResponse
+        } 
+      });
     }
   };
 

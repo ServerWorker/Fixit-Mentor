@@ -17,13 +17,15 @@ export default function ResponsePage() {
   const [projectTitle, setProjectTitle] = useState("");
 
   useEffect(() => {
-    if (!location.state?.response) {
+    if (!location.state) {
       navigate("/system");
       return;
     }
 
-    const response = location.state.response;
-    parseResponse(response);
+    const response = location.state.response || "";
+    if (response) {
+      parseResponse(response);
+    }
   }, [location.state, navigate]);
 
   const parseResponse = (text: string) => {
@@ -121,9 +123,44 @@ export default function ResponsePage() {
           </div>
         </div>
 
+        {/* Empty State */}
+        {(!sections || sections.length === 0) && (
+          <Card className="p-12 bg-gradient-card shadow-soft animate-fade-in text-center">
+            <div className="max-w-2xl mx-auto">
+              <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                <span className="text-4xl">🤖</span>
+              </div>
+              <h2 className="text-2xl font-bold mb-4 text-foreground">
+                No Response Generated Yet
+              </h2>
+              <p className="text-muted-foreground mb-6 text-lg">
+                {location.state?.error 
+                  ? "There was an issue generating your plan. This could be due to API configuration or connectivity issues."
+                  : "The response is empty. Please try again with different inputs or check your backend configuration."}
+              </p>
+              <div className="bg-muted/30 rounded-lg p-6 mb-6 text-left">
+                <p className="text-sm text-muted-foreground mb-2">Your inputs:</p>
+                <p className="text-foreground"><strong>Waste Item:</strong> {location.state?.wasteItem}</p>
+                <p className="text-foreground"><strong>Budget:</strong> ₹{location.state?.budget}</p>
+                {location.state?.otherInfo && (
+                  <p className="text-foreground"><strong>Other Info:</strong> {location.state?.otherInfo}</p>
+                )}
+              </div>
+              <Button
+                onClick={() => navigate("/system")}
+                size="lg"
+                className="bg-gradient-primary text-white hover:opacity-90"
+              >
+                Try Again
+              </Button>
+            </div>
+          </Card>
+        )}
+
         {/* Sections */}
-        <div className="space-y-0">
-          {sections.map((section, index) => (
+        {sections && sections.length > 0 && (
+          <div className="space-y-0">
+            {sections.map((section, index) => (
             <div
               key={section.title}
               className={`py-12 px-4 sm:px-8 ${getSectionColor(index)} animate-fade-in`}
@@ -205,8 +242,9 @@ export default function ResponsePage() {
                 )}
               </div>
             </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
 
         {/* Action Buttons */}
         <div className="mt-12 text-center space-y-4 animate-fade-in">
