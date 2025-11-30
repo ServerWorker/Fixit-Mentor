@@ -1,20 +1,24 @@
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Brain, Menu, X } from "lucide-react";
+import { Brain, Menu, X, Settings } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { SettingsDialog } from "@/components/SettingsDialog";
 
 export const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const location = useLocation();
+  const { t } = useLanguage();
 
   const links = [
-    { name: "Home", path: "/" },
-    { name: "Dashboard", path: "/dashboard" },
-    { name: "System", path: "/system" },
-    { name: "About", path: "/about" },
-    { name: "Contact", path: "/contact" },
-    { name: "Donate", path: "/donate" },
+    { name: t('nav.home'), path: "/" },
+    { name: t('nav.dashboard'), path: "/dashboard" },
+    { name: t('nav.system'), path: "/system" },
+    { name: t('nav.about'), path: "/about" },
+    { name: t('nav.contact'), path: "/contact" },
+    { name: t('nav.donate'), path: "/donate" },
   ];
 
   const isActive = (path: string) => location.pathname === path;
@@ -28,7 +32,7 @@ export const Navigation = () => {
               <Brain className="w-6 h-6 text-white" />
             </div>
             <span className="text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-              ThinkStruct AI
+              ReUse AI
             </span>
           </Link>
 
@@ -50,9 +54,17 @@ export const Navigation = () => {
             ))}
             <Link to="/system">
               <Button size="sm" className="bg-gradient-primary text-white hover:opacity-90">
-                Start Solving
+                {t('nav.startSolving')}
               </Button>
             </Link>
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={() => setSettingsOpen(true)}
+              className="p-2"
+            >
+              <Settings className="w-5 h-5" />
+            </Button>
           </div>
 
           {/* Mobile Menu Button */}
@@ -83,13 +95,14 @@ export const Navigation = () => {
               ))}
               <Link to="/system" onClick={() => setIsOpen(false)}>
                 <Button size="sm" className="w-full bg-gradient-primary text-white hover:opacity-90">
-                  Start Solving
+                  {t('nav.startSolving')}
                 </Button>
               </Link>
             </div>
           </div>
         )}
       </div>
+      <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
     </nav>
   );
 };
