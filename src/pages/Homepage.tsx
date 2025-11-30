@@ -15,26 +15,29 @@ import {
   FileText,
   Download,
 } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function Homepage() {
+  const { t } = useLanguage();
+  
   const steps = [
-    { icon: Target, title: "Identify", desc: "Define your goal clearly" },
-    { icon: Search, title: "Analyse", desc: "Examine your resources" },
-    { icon: Filter, title: "Evaluate", desc: "Check constraints & options" },
+    { icon: Target, title: t('home.step1Title'), desc: t('home.step1Desc') },
+    { icon: Search, title: t('home.step2Title'), desc: t('home.step2Desc') },
+    { icon: Filter, title: t('home.step3Title'), desc: t('home.step3Desc') },
   ];
 
   const differences = [
     {
-      normal: "Gives you an answer",
-      thinkstruct: "Gives you a structured solution path",
+      normal: t('home.diff1Normal'),
+      thinkstruct: t('home.diff1Reuse'),
     },
     {
-      normal: "One-shot response",
-      thinkstruct: "6-step guided workflow",
+      normal: t('home.diff2Normal'),
+      thinkstruct: t('home.diff2Reuse'),
     },
     {
-      normal: "No actionable breakdown",
-      thinkstruct: "Downloadable action plan",
+      normal: t('home.diff3Normal'),
+      thinkstruct: t('home.diff3Reuse'),
     },
   ];
 
@@ -42,8 +45,8 @@ export default function Homepage() {
     <div className="min-h-screen">
       {/* Hero Section */}
       <section className="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 bg-gradient-subtle overflow-hidden">
-        {/* Spline 3D Orb Background */}
-        <div className="absolute inset-0 flex items-center justify-center opacity-40 pointer-events-none overflow-hidden">
+        {/* Spline 3D Orb Background - Hidden on mobile */}
+        <div className="absolute inset-0 hidden md:flex items-center justify-center opacity-40 pointer-events-none overflow-hidden">
           <iframe 
             src='https://my.spline.design/orb-nRggrwiCPbiWf6wn548YA5Pt/' 
             frameBorder='0' 
@@ -55,26 +58,26 @@ export default function Homepage() {
         
         <div className="container mx-auto max-w-6xl text-center relative z-10">
           <div className="inline-block mb-6 px-4 py-2 bg-primary/10 rounded-full text-primary text-sm font-medium animate-fade-in">
-            Better Than Normal AI
+            {t('home.badge')}
           </div>
           <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-6 animate-fade-in-up">
-            ThinkStruct AI —{" "}
+            {t('home.title')}{" "}
             <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-              Smarter Than Normal AI
+              {t('home.titleHighlight')}
             </span>
           </h1>
           <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto animate-fade-in-up">
-            A structured solution engine that thinks step-by-step like humans, not just gives answers.
+            {t('home.subtitle')}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up">
             <Link to="/system">
               <Button size="lg" className="bg-gradient-primary text-white hover:opacity-90 shadow-medium">
-                Start Solving <ArrowRight className="ml-2 w-5 h-5" />
+                {t('home.getStarted')} <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
             </Link>
             <Link to="/about">
               <Button size="lg" variant="outline">
-                Learn More
+                {t('home.learnMore')}
               </Button>
             </Link>
           </div>
@@ -87,41 +90,19 @@ export default function Homepage() {
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
               <h2 className="text-3xl sm:text-4xl font-bold mb-4">
-                The Problem with Normal AI
+                {t('home.problemTitle')}
               </h2>
               <p className="text-lg text-muted-foreground mb-6">
-                Traditional AI gives you answers, but not the thinking process. It's like getting
-                the solution to a math problem without understanding how to solve it.
+                {t('home.problemDesc')}
               </p>
-              <ul className="space-y-3">
-                {["No structured breakdown", "Missing context", "No actionable steps"].map((item) => (
-                  <li key={item} className="flex items-center gap-3">
-                    <div className="w-6 h-6 rounded-full bg-destructive/10 flex items-center justify-center flex-shrink-0">
-                      <div className="w-2 h-2 rounded-full bg-destructive" />
-                    </div>
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
             </div>
             <Card className="p-8 bg-gradient-card shadow-medium">
               <div className="space-y-4">
                 <div className="flex items-start gap-4">
                   <Brain className="w-8 h-8 text-primary flex-shrink-0" />
                   <div>
-                    <h3 className="font-semibold mb-2">Normal AI Response:</h3>
                     <p className="text-muted-foreground">
-                      "You should take your laptop to a repair shop."
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4">
-                  <Zap className="w-8 h-8 text-accent flex-shrink-0" />
-                  <div>
-                    <h3 className="font-semibold mb-2">ThinkStruct AI:</h3>
-                    <p className="text-muted-foreground">
-                      "Let's structure this: <strong>Identify</strong> the issue, <strong>Analyse</strong> repair vs replace costs, 
-                      <strong>Evaluate</strong> warranty status, <strong>Plan</strong> the best action..."
+                      {t('home.problemDesc')}
                     </p>
                   </div>
                 </div>
@@ -135,15 +116,15 @@ export default function Homepage() {
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-subtle">
         <div className="container mx-auto max-w-4xl">
           <h2 className="text-3xl sm:text-4xl font-bold mb-12 text-center">
-            ThinkStruct AI vs Normal AI
+            {t('home.comparisonTitle')}
           </h2>
           <Card className="overflow-hidden shadow-strong">
             <div className="grid grid-cols-2 divide-x divide-border">
               <div className="p-6 bg-muted/30">
-                <h3 className="font-semibold text-lg mb-4 text-center">Normal AI</h3>
+                <h3 className="font-semibold text-lg mb-4 text-center">{t('home.normalAI')}</h3>
               </div>
               <div className="p-6 bg-primary/5">
-                <h3 className="font-semibold text-lg mb-4 text-center text-primary">ThinkStruct AI</h3>
+                <h3 className="font-semibold text-lg mb-4 text-center text-primary">{t('home.reuseAI')}</h3>
               </div>
             </div>
             {differences.map((diff, idx) => (
@@ -160,10 +141,10 @@ export default function Homepage() {
       <section className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="container mx-auto max-w-6xl">
           <h2 className="text-3xl sm:text-4xl font-bold mb-4 text-center">
-            How It Works
+            {t('home.howItWorksTitle')}
           </h2>
           <p className="text-lg text-muted-foreground mb-12 text-center max-w-2xl mx-auto">
-            ThinkStruct AI guides you through a proven 3-step thinking process
+            {t('home.howItWorksDesc')}
           </p>
           <div className="grid md:grid-cols-3 gap-8">
             {steps.map((step, idx) => (
@@ -187,38 +168,38 @@ export default function Homepage() {
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-subtle">
         <div className="container mx-auto max-w-5xl">
           <h2 className="text-3xl sm:text-4xl font-bold mb-12 text-center">
-            What Makes ThinkStruct AI Different?
+            {t('home.exampleTitle')}
           </h2>
           <Card className="p-8 md:p-12 bg-gradient-card shadow-strong">
             <div className="mb-8">
               <div className="inline-block px-4 py-2 bg-accent/10 rounded-full text-accent text-sm font-medium mb-4">
-                Real Example
+                {t('home.exampleBadge')}
               </div>
               <h3 className="text-2xl font-bold mb-4">
-                "I have a broken laptop — what should I do?"
+                {t('home.exampleQuestion')}
               </h3>
             </div>
             <div className="space-y-6">
               {[
                 {
                   icon: Target,
-                  title: "1. Identify the Goal",
-                  desc: "Fix or replace the laptop within budget",
+                  title: t('home.example1Title'),
+                  desc: t('home.example1Desc'),
                 },
                 {
                   icon: Search,
-                  title: "2. Analyse Resources",
-                  desc: "Budget: $300, Warranty: Expired, Data: Backed up",
+                  title: t('home.example2Title'),
+                  desc: t('home.example2Desc'),
                 },
                 {
                   icon: Filter,
-                  title: "3. Evaluate Options",
-                  desc: "Repair ($150), Replace ($400), Use old device temporarily",
+                  title: t('home.example3Title'),
+                  desc: t('home.example3Desc'),
                 },
                 {
                   icon: TrendingUp,
-                  title: "4. Plan Action",
-                  desc: "Get repair quote → Compare with new models → Decide within 48hrs",
+                  title: t('home.example4Title'),
+                  desc: t('home.example4Desc'),
                 },
               ].map((item, idx) => (
                 <div key={idx} className="flex items-start gap-4 p-4 rounded-lg hover:bg-secondary/50 transition-colors">
@@ -235,7 +216,7 @@ export default function Homepage() {
             <div className="mt-8 flex justify-center">
               <Link to="/system">
                 <Button className="bg-gradient-primary text-white hover:opacity-90">
-                  Try It Yourself <ArrowRight className="ml-2 w-4 h-4" />
+                  {t('home.tryIt')} <ArrowRight className="ml-2 w-4 h-4" />
                 </Button>
               </Link>
             </div>
@@ -252,29 +233,29 @@ export default function Homepage() {
                 <div className="w-10 h-10 rounded-xl bg-gradient-primary flex items-center justify-center">
                   <Brain className="w-6 h-6 text-white" />
                 </div>
-                <span className="text-xl font-bold">ThinkStruct AI</span>
+                <span className="text-xl font-bold">ReUse AI</span>
               </div>
               <p className="text-muted-foreground mb-4">
-                A structured solution engine that thinks step-by-step like humans.
+                {t('home.footerDesc')}
               </p>
             </div>
             <div>
-              <h4 className="font-semibold mb-4">Quick Links</h4>
+              <h4 className="font-semibold mb-4">{t('home.quickLinks')}</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><Link to="/dashboard" className="hover:text-primary transition-colors">Dashboard</Link></li>
-                <li><Link to="/system" className="hover:text-primary transition-colors">System</Link></li>
-                <li><Link to="/about" className="hover:text-primary transition-colors">About</Link></li>
+                <li><Link to="/dashboard" className="hover:text-primary transition-colors">{t('nav.dashboard')}</Link></li>
+                <li><Link to="/system" className="hover:text-primary transition-colors">{t('nav.system')}</Link></li>
+                <li><Link to="/about" className="hover:text-primary transition-colors">{t('nav.about')}</Link></li>
               </ul>
             </div>
             <div>
-              <h4 className="font-semibold mb-4">Contact</h4>
+              <h4 className="font-semibold mb-4">{t('home.contactTitle')}</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><Link to="/contact" className="hover:text-primary transition-colors">Get in Touch</Link></li>
+                <li><Link to="/contact" className="hover:text-primary transition-colors">{t('home.getInTouch')}</Link></li>
               </ul>
             </div>
           </div>
           <div className="mt-8 pt-8 border-t border-border text-center text-sm text-muted-foreground">
-            © 2025 ThinkStruct AI. All rights reserved.
+            {t('home.copyright')}
           </div>
         </div>
       </footer>

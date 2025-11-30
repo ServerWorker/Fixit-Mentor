@@ -4,6 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import ReactMarkdown from "react-markdown";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface Section {
   title: string;
@@ -13,6 +14,7 @@ interface Section {
 export default function ResponsePage() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [sections, setSections] = useState<Section[]>([]);
   const [projectTitle, setProjectTitle] = useState("");
 
@@ -131,19 +133,19 @@ export default function ResponsePage() {
                 <span className="text-4xl">🤖</span>
               </div>
               <h2 className="text-2xl font-bold mb-4 text-foreground">
-                No Response Generated Yet
+                {t('response.noResponseTitle')}
               </h2>
               <p className="text-muted-foreground mb-6 text-lg">
                 {location.state?.error 
-                  ? "There was an issue generating your plan. This could be due to API configuration or connectivity issues."
-                  : "The response is empty. Please try again with different inputs or check your backend configuration."}
+                  ? t('response.errorDesc')
+                  : t('response.noResponseDesc')}
               </p>
               <div className="bg-muted/30 rounded-lg p-6 mb-6 text-left">
-                <p className="text-sm text-muted-foreground mb-2">Your inputs:</p>
-                <p className="text-foreground"><strong>Waste Item:</strong> {location.state?.wasteItem}</p>
-                <p className="text-foreground"><strong>Budget:</strong> ₹{location.state?.budget}</p>
+                <p className="text-sm text-muted-foreground mb-2">{t('response.yourInputs')}</p>
+                <p className="text-foreground"><strong>{t('response.wasteItem')}</strong> {location.state?.wasteItem}</p>
+                <p className="text-foreground"><strong>{t('response.budget')}</strong> ₹{location.state?.budget}</p>
                 {location.state?.otherInfo && (
-                  <p className="text-foreground"><strong>Other Info:</strong> {location.state?.otherInfo}</p>
+                  <p className="text-foreground"><strong>{t('response.otherInfo')}</strong> {location.state?.otherInfo}</p>
                 )}
               </div>
               <Button
@@ -151,7 +153,7 @@ export default function ResponsePage() {
                 size="lg"
                 className="bg-gradient-primary text-white hover:opacity-90"
               >
-                Try Again
+                {t('response.tryAgain')}
               </Button>
             </div>
           </Card>
@@ -253,7 +255,7 @@ export default function ResponsePage() {
             size="lg"
             className="bg-gradient-primary text-white hover:opacity-90"
           >
-            Create Another Plan
+            {t('response.newPlan')}
           </Button>
         </div>
       </div>
