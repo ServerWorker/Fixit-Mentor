@@ -32,7 +32,7 @@ export const Navigation = () => {
               <Brain className="w-6 h-6 text-white" />
             </div>
             <span className="text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-              ReUse AI
+              Fixit Mentor
             </span>
           </Link>
 
@@ -57,14 +57,6 @@ export const Navigation = () => {
                 {t('nav.startSolving')}
               </Button>
             </Link>
-            <Button
-              size="sm"
-              variant="ghost"
-              onClick={() => setSettingsOpen(true)}
-              className="p-2"
-            >
-              <Settings className="w-5 h-5" />
-            </Button>
           </div>
 
           {/* Mobile Menu Button */}
@@ -98,6 +90,18 @@ export const Navigation = () => {
                   {t('nav.startSolving')}
                 </Button>
               </Link>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => {
+                  setIsOpen(false);
+                  setSettingsOpen(true);
+                }}
+                className="w-full"
+              >
+                <Settings className="w-4 h-4 mr-2" />
+                {t('nav.settings')}
+              </Button>
             </div>
           </div>
         )}

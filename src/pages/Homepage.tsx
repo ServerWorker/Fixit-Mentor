@@ -29,15 +29,23 @@ export default function Homepage() {
   const differences = [
     {
       normal: t('home.diff1Normal'),
-      thinkstruct: t('home.diff1Reuse'),
+      fixit: t('home.diff1Fixit'),
     },
     {
       normal: t('home.diff2Normal'),
-      thinkstruct: t('home.diff2Reuse'),
+      fixit: t('home.diff2Fixit'),
     },
     {
       normal: t('home.diff3Normal'),
-      thinkstruct: t('home.diff3Reuse'),
+      fixit: t('home.diff3Fixit'),
+    },
+    {
+      normal: t('home.diff4Normal'),
+      fixit: t('home.diff4Fixit'),
+    },
+    {
+      normal: t('home.diff5Normal'),
+      fixit: t('home.diff5Fixit'),
     },
   ];
 
@@ -124,13 +132,13 @@ export default function Homepage() {
                 <h3 className="font-semibold text-lg mb-4 text-center">{t('home.normalAI')}</h3>
               </div>
               <div className="p-6 bg-primary/5">
-                <h3 className="font-semibold text-lg mb-4 text-center text-primary">{t('home.reuseAI')}</h3>
+                <h3 className="font-semibold text-lg mb-4 text-center text-primary">{t('home.fixitAI')}</h3>
               </div>
             </div>
             {differences.map((diff, idx) => (
               <div key={idx} className="grid grid-cols-2 divide-x divide-border border-t border-border">
                 <div className="p-6 text-sm">{diff.normal}</div>
-                <div className="p-6 text-sm font-medium bg-primary/5">{diff.thinkstruct}</div>
+                <div className="p-6 text-sm font-medium bg-primary/5">{diff.fixit}</div>
               </div>
             ))}
           </Card>
@@ -233,7 +241,7 @@ export default function Homepage() {
                 <div className="w-10 h-10 rounded-xl bg-gradient-primary flex items-center justify-center">
                   <Brain className="w-6 h-6 text-white" />
                 </div>
-                <span className="text-xl font-bold">ReUse AI</span>
+                <span className="text-xl font-bold">Fixit Mentor</span>
               </div>
               <p className="text-muted-foreground mb-4">
                 {t('home.footerDesc')}
