@@ -17,59 +17,65 @@ export default function SystemPage() {
   const [otherInfo, setOtherInfo] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleGenerate = async () => {
-    // Validation
-    if (!wasteItem.trim()) {
-      toast.error(t('system.errorWasteItem'));
-      return;
-    }
-    if (!budget || parseInt(budget) <= 0) {
-      toast.error(t('system.errorBudget'));
-      return;
-    }
+const handleGenerate = async () => {
+    // Validation (remains unchanged)
+    if (!wasteItem.trim()) {
+      toast.error(t('system.errorWasteItem'));
+      return;
+    }
+    if (!budget || parseInt(budget) <= 0) {
+      toast.error(t('system.errorBudget'));
+      return;
+    }
 
-    setLoading(true);
+    setLoading(true);
 
-    let geminiResponse = "";
+    let geminiResponse = "";
 
-    try {
-      // TODO: Replace with your actual backend URL
-      const response = await fetch("https://YOUR-BACKEND-URL/recycle", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          waste_item: wasteItem,
-          budget: budget,
-          other_info: otherInfo,
-        }),
-      });
+    try {
+      // MODIFICATION 1: Use the secure, relative Vercel API path
+      const response = await fetch("/api/gemini", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        // MODIFICATION 2: Correct Payload Structure and Syntax
+        body: JSON.stringify({
+          item: wasteItem, // Match backend's 'item'
+          budget: budget,
+          otherInfo: otherInfo, // Match backend's 'otherInfo'
+        }),
+      }); // <--- CRITICAL FIX: The closing parenthesis and semicolon for fetch options must be here
 
-      if (response.ok) {
-        const data = await response.json();
-        geminiResponse = data.response || "";
-        toast.success("Response generated!");
-      } else {
-        toast.error("Failed to generate plan, but redirecting anyway");
-      }
-    } catch (err) {
-      toast.error("API error occurred, redirecting to response page");
-    } finally {
-      setLoading(false);
-      
-      // Always redirect to response page, even if API fails
-      navigate("/response", { 
-        state: { 
-          response: geminiResponse,
-          wasteItem,
-          budget,
-          otherInfo,
-          error: !geminiResponse
-        } 
-      });
-    }
-  };
+      if (response.ok) {
+        const data = await response.json();
+        // MODIFICATION 3: Expect the 'solution' key from the backend
+        geminiResponse = data.solution || "";
+        toast.success("Circularity Report Generated Successfully! 🚀");
+      } else {
+        // Read and display the actual error message from the backend if available
+        const errorData = await response.json();
+        const errorMessage = errorData.message || "Failed to generate plan. Check Vercel logs.";
+        toast.error(errorMessage);
+      }
+    } catch (err) {
+      toast.error("Network or API call failed.");
+      console.error("Fetch Error:", err);
+    } finally {
+      setLoading(false);
+      
+      // Always redirect to response page
+      navigate("/response", { 
+        state: { 
+          response: geminiResponse,
+          wasteItem,
+          budget,
+          otherInfo,
+          error: !geminiResponse
+        } 
+      });
+    }
+  };
 
   return (
     <div className="min-h-screen pt-24 pb-16 px-4 sm:px-6 lg:px-8 bg-gradient-subtle">
@@ -157,3 +163,4 @@ export default function SystemPage() {
     </div>
   );
 }
+
