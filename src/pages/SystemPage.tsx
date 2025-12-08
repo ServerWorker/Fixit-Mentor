@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Recycle, Sparkles, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { supabase } from "@/integrations/supabase/client";
 
 export default function SystemPage() {
   const navigate = useNavigate();
@@ -32,50 +33,42 @@ const handleGenerate = async () => {
 
     let geminiResponse = "";
 
-    try {
-      // MODIFICATION 1: Use the secure, relative Vercel API path
-      const response = await fetch("/api/gemini", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        // MODIFICATION 2: Correct Payload Structure and Syntax
-        body: JSON.stringify({
-          item: wasteItem, // Match backend's 'item'
-          budget: budget,
-          otherInfo: otherInfo, // Match backend's 'otherInfo'
-        }),
-      }); // <--- CRITICAL FIX: The closing parenthesis and semicolon for fetch options must be here
+    try {
+      const { data, error } = await supabase.functions.invoke('gemini', {
+        body: {
+          item: wasteItem,
+          budget: budget,
+          otherInfo: otherInfo,
+        },
+      });
 
-      if (response.ok) {
-        const data = await response.json();
-        // MODIFICATION 3: Expect the 'solution' key from the backend
-        geminiResponse = data.solution || "";
-        toast.success("Circularity Report Generated Successfully! 🚀");
-      } else {
-        // Read and display the actual error message from the backend if available
-        const errorData = await response.json();
-        const errorMessage = errorData.message || "Failed to generate plan. Check Vercel logs.";
-        toast.error(errorMessage);
-      }
-    } catch (err) {
-      toast.error("Network or API call failed.");
-      console.error("Fetch Error:", err);
-    } finally {
-      setLoading(false);
-      
-      // Always redirect to response page
-      navigate("/response", { 
-        state: { 
-          response: geminiResponse,
-          wasteItem,
-          budget,
-          otherInfo,
-          error: !geminiResponse
-        } 
-      });
-    }
-  };
+      if (error) {
+        console.error('Edge function error:', error);
+        toast.error(error.message || "Failed to generate plan.");
+      } else if (data?.solution) {
+        geminiResponse = data.solution;
+        toast.success("Circularity Report Generated Successfully! 🚀");
+      } else if (data?.message) {
+        toast.error(data.message);
+      }
+    } catch (err) {
+      toast.error("Network or API call failed.");
+      console.error("Fetch Error:", err);
+    } finally {
+      setLoading(false);
+      
+      // Always redirect to response page
+      navigate("/response", { 
+        state: { 
+          response: geminiResponse,
+          wasteItem,
+          budget,
+          otherInfo,
+          error: !geminiResponse
+        } 
+      });
+    }
+  };
 
   return (
     <div className="min-h-screen pt-24 pb-16 px-4 sm:px-6 lg:px-8 bg-gradient-subtle">
