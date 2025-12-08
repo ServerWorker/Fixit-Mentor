@@ -1,8 +1,15 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Heart, Leaf, Recycle } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export default function Donate() {
+  const navigate = useNavigate();
+
+  const handleAmountSelect = (amount: string) => {
+    navigate("/thank-you", { state: { amount } });
+  };
+
   return (
     <div className="min-h-screen pt-24 pb-16 px-4 sm:px-6 lg:px-8 bg-gradient-subtle">
       <div className="container mx-auto max-w-4xl">
@@ -63,6 +70,7 @@ export default function Donate() {
                   variant="outline"
                   className="h-20 text-xl font-bold hover:bg-primary hover:text-primary-foreground transition-all"
                   style={{ animationDelay: `${0.5 + index * 0.1}s` }}
+                  onClick={() => handleAmountSelect(amount)}
                 >
                   {amount}
                 </Button>
@@ -72,6 +80,7 @@ export default function Donate() {
             <Button
               size="lg"
               className="bg-gradient-primary text-white hover:opacity-90 h-14 px-12 text-lg font-semibold"
+              onClick={() => handleAmountSelect("Custom Amount")}
             >
               <Heart className="mr-2 h-5 w-5" />
               Donate Now

@@ -145,6 +145,16 @@ const translations: Record<Language, Record<string, string>> = {
     'response.budget': 'Budget:',
     'response.otherInfo': 'Other Info:',
     'response.tryAgain': 'Try Again',
+    
+    // Thank You Page
+    'cashOnlyTitle': 'We Only Accept Cash Right Now',
+    'selectedAmount': 'Selected Amount',
+    'thankYouTitle': 'Thank You for Your Support!',
+    'thankYouMessage1': 'Your generous heart and willingness to contribute means the world to us. Every donation, no matter the size, helps us continue our mission of building a more sustainable future through innovative AI solutions.',
+    'thankYouMessage2': 'By supporting Fixit Mentor, you are helping countless people discover creative ways to reuse broken items, reduce waste, and contribute to environmental conservation. Your kindness creates a ripple effect that touches lives across communities.',
+    'thankYouMessage3': 'We are deeply grateful for your consideration and support. Together, we can make a real difference in how people think about waste and sustainability. Thank you for being part of our journey towards a greener planet.',
+    'contactForDonation': 'To complete your cash donation, please contact us at:',
+    'backToHome': 'Back to Home',
   },
   hi: {
     // Navigation
@@ -231,6 +241,16 @@ const translations: Record<Language, Record<string, string>> = {
     'response.budget': 'बजट:',
     'response.otherInfo': 'अन्य जानकारी:',
     'response.tryAgain': 'पुनः प्रयास करें',
+    
+    // Thank You Page
+    'cashOnlyTitle': 'हम अभी केवल नकद स्वीकार करते हैं',
+    'selectedAmount': 'चयनित राशि',
+    'thankYouTitle': 'आपके समर्थन के लिए धन्यवाद!',
+    'thankYouMessage1': 'आपका उदार दिल और योगदान करने की इच्छा हमारे लिए बहुत मायने रखती है। हर दान, चाहे कितना भी हो, हमें नवीन एआई समाधानों के माध्यम से अधिक टिकाऊ भविष्य बनाने के हमारे मिशन को जारी रखने में मदद करता है।',
+    'thankYouMessage2': 'फिक्सिट मेंटर का समर्थन करके, आप अनगिनत लोगों को टूटी वस्तुओं का पुनः उपयोग करने, कचरा कम करने और पर्यावरण संरक्षण में योगदान करने के रचनात्मक तरीके खोजने में मदद कर रहे हैं।',
+    'thankYouMessage3': 'आपके विचार और समर्थन के लिए हम गहराई से आभारी हैं। साथ मिलकर, हम एक हरित ग्रह की ओर वास्तविक अंतर ला सकते हैं।',
+    'contactForDonation': 'अपना नकद दान पूरा करने के लिए, कृपया हमसे संपर्क करें:',
+    'backToHome': 'होम पर वापस जाएं',
   },
   ur: {
     'nav.home': 'گھر',
