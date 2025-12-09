@@ -19,17 +19,11 @@ export const ResponseNavigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("overview");
-  const [scrollProgress, setScrollProgress] = useState(0);
   const navigate = useNavigate();
   const { t } = useLanguage();
 
   useEffect(() => {
     const handleScroll = () => {
-      const scrollTop = window.scrollY;
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
-      setScrollProgress(progress);
-
       // Update active section based on scroll position
       const sections = sectionLinks.map(link => ({
         id: link.id,
@@ -64,9 +58,6 @@ export const ResponseNavigation = () => {
   return (
     <>
       <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border">
-        {/* Progress Bar */}
-        <div className="absolute bottom-0 left-0 h-0.5 bg-gradient-primary transition-all duration-150" style={{ width: `${scrollProgress}%` }} />
-        
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <Link to="/" className="flex items-center gap-2 group">
