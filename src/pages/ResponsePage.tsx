@@ -2,22 +2,20 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, XCircle } from "lucide-react"; // Import XCircle for error state
+import { ArrowLeft, XCircle } from "lucide-react";
 import ReactMarkdown from "react-markdown";
-import remarkGfm from 'remark-gfm'; // <-- ADD THIS IMPORT for tables/checklists
+import remarkGfm from 'remark-gfm';
 import { useLanguage } from "@/contexts/LanguageContext";
-
-// Remove the Section interface as we are no longer splitting the text
+import { ResponseNavigation } from "@/components/ResponseNavigation";
 
 export default function ResponsePage() {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const { t } = useLanguage();
-  
-  // --- NEW STATE ---
-  const [fullReport, setFullReport] = useState("");
-  const [projectTitle, setProjectTitle] = useState("Circularity Consultant Report");
-  
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { t } = useLanguage();
+  
+  const [fullReport, setFullReport] = useState("");
+  const [projectTitle, setProjectTitle] = useState("Circularity Consultant Report");
+  
   const reportData = location.state || {};
   const response = reportData.response || "";
   const error = reportData.error;
@@ -76,33 +74,44 @@ export default function ResponsePage() {
     );
   }
 
-  return (
-    <div className="min-h-screen pt-24 pb-16 bg-gradient-subtle">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
-        {/* Back Button */}
-        <Button
-          onClick={handleBack}
-          variant="ghost"
-          className="mb-6 animate-fade-in"
-        >
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to System
-        </Button>
+  // Generate section ID from heading text
+  const generateId = (text: string): string => {
+    return text
+      .toLowerCase()
+      .replace(/[^a-z0-9\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .trim();
+  };
 
-        {/* Project Title */}
-        <div className="text-center mb-12 animate-fade-in">
-          <h1 className="text-4xl sm:text-5xl font-bold mb-4 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-            {projectTitle}
-          </h1>
-          <div className="flex gap-4 justify-center flex-wrap text-sm text-muted-foreground">
-            {reportData.wasteItem && (
-              <span>Item: <strong className="text-foreground">{reportData.wasteItem}</strong></span>
-            )}
-            {reportData.budget && (
-              <span>Budget: <strong className="text-foreground">₹{reportData.budget}</strong></span>
-            )}
-          </div>
-        </div>
+  return (
+    <>
+      <ResponseNavigation />
+      <div className="min-h-screen pt-24 pb-16 bg-gradient-subtle">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
+          {/* Back Button */}
+          <Button
+            onClick={handleBack}
+            variant="ghost"
+            className="mb-6 animate-fade-in"
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back to System
+          </Button>
+
+          {/* Project Title */}
+          <div id="overview" className="text-center mb-12 animate-fade-in scroll-mt-24">
+            <h1 className="text-4xl sm:text-5xl font-bold mb-4 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+              {projectTitle}
+            </h1>
+            <div className="flex gap-4 justify-center flex-wrap text-sm text-muted-foreground">
+              {reportData.wasteItem && (
+                <span>Item: <strong className="text-foreground">{reportData.wasteItem}</strong></span>
+              )}
+              {reportData.budget && (
+                <span>Budget: <strong className="text-foreground">₹{reportData.budget}</strong></span>
+              )}
+            </div>
+          </div>
 
         {/* Single Card to Render Full Report */}
         <Card className="p-6 sm:p-8 shadow-2xl bg-card border border-border animate-fade-in">
@@ -110,17 +119,25 @@ export default function ResponsePage() {
             <ReactMarkdown
               remarkPlugins={[remarkGfm]} 
               components={{
-                h1: ({ node, ...props }) => (
-                  <h1 className="text-3xl font-bold mb-6 text-foreground" {...props} />
+                h1: ({ node, children, ...props }) => (
+                  <h1 className="text-3xl font-bold mb-6 text-foreground" {...props}>{children}</h1>
                 ),
-                h2: ({ node, ...props }) => (
-                  <div className="mt-12 mb-6 pt-8 border-t-2 border-primary/30">
-                    <h2 className="text-2xl font-bold text-foreground" {...props} />
-                  </div>
-                ),
-                h3: ({ node, ...props }) => (
-                  <h3 className="text-xl font-semibold mt-6 mb-3 text-foreground" {...props} />
-                ),
+                h2: ({ node, children, ...props }) => {
+                  const text = String(children);
+                  const id = generateId(text);
+                  return (
+                    <div id={id} className="mt-12 mb-6 pt-8 border-t-2 border-primary/30 scroll-mt-24">
+                      <h2 className="text-2xl font-bold text-foreground" {...props}>{children}</h2>
+                    </div>
+                  );
+                },
+                h3: ({ node, children, ...props }) => {
+                  const text = String(children);
+                  const id = generateId(text);
+                  return (
+                    <h3 id={id} className="text-xl font-semibold mt-6 mb-3 text-foreground scroll-mt-24" {...props}>{children}</h3>
+                  );
+                },
                 p: ({ node, ...props }) => (
                   <p className="text-foreground/90 leading-relaxed mb-4" {...props} />
                 ),
@@ -163,17 +180,18 @@ export default function ResponsePage() {
           </div>
         </Card>
 
-        {/* Action Buttons */}
-        <div className="mt-12 text-center space-y-4 animate-fade-in">
-          <Button
-            onClick={handleBack}
-            size="lg"
-            className="bg-gradient-primary text-white hover:opacity-90"
-          >
-            {t('response.newPlan')}
-          </Button>
-        </div>
-      </div>
-    </div>
-  );
+          {/* Action Buttons */}
+          <div className="mt-12 text-center space-y-4 animate-fade-in">
+            <Button
+              onClick={handleBack}
+              size="lg"
+              className="bg-gradient-primary text-white hover:opacity-90"
+            >
+              {t('response.newPlan')}
+            </Button>
+          </div>
+        </div>
+      </div>
+    </>
+  );
 }
