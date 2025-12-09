@@ -22,26 +22,39 @@ export default function ResponsePage() {
   const response = reportData.response || "";
   const error = reportData.error;
 
-  useEffect(() => {
-    if (!response && !error) {
-      // Only redirect if there's no state or no response and no error flag
-      navigate("/system");
-      return;
-    }
+  useEffect(() => {
+    if (!response && !error) {
+      // Only redirect if there's no state or no response and no error flag
+      navigate("/system");
+      return;
+    }
 
-    setFullReport(response);
+    // Sanitize the response - remove leading garbage characters before markdown
+    let cleanedResponse = response;
+    if (cleanedResponse) {
+      // Remove leading whitespace, commas, and other garbage before markdown starts
+      cleanedResponse = cleanedResponse.replace(/^[\s,]+/, '');
+      // Ensure it starts with valid markdown (# or text)
+      const firstHashIndex = cleanedResponse.indexOf('#');
+      if (firstHashIndex > 0 && firstHashIndex < 20) {
+        // If there's garbage before the first heading, remove it
+        cleanedResponse = cleanedResponse.substring(firstHashIndex);
+      }
+    }
+    
+    setFullReport(cleanedResponse);
 
-    // Simple attempt to set a better title (optional)
-    const lines = response.split('\n');
-    if (lines.length > 0) {
-      // Take the first non-header line as the title, or keep the default
-      const titleLine = lines.find(line => line.trim() && !line.startsWith('#'));
-      if (titleLine) {
-        setProjectTitle(titleLine.trim());
-      }
-    }
+    // Simple attempt to set a better title (optional)
+    const lines = cleanedResponse.split('\n');
+    if (lines.length > 0) {
+      // Take the first heading as the title
+      const titleLine = lines.find(line => line.trim().startsWith('#'));
+      if (titleLine) {
+        setProjectTitle(titleLine.replace(/^#+\s*/, '').trim());
+      }
+    }
 
-  }, [response, error, navigate]); // Depend only on response/error state
+  }, [response, error, navigate]); // Depend only on response/error state
 
   const handleBack = () => navigate("/system");
 
