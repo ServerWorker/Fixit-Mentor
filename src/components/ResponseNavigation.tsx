@@ -1,22 +1,56 @@
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Brain, Menu, X, ArrowLeft } from "lucide-react";
-import { useState } from "react";
+import { Brain, Menu, X, ArrowLeft, Settings } from "lucide-react";
+import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
+import { SettingsDialog } from "@/components/SettingsDialog";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const sectionLinks = [
-  { name: "Overview", id: "overview" },
-  { name: "Recommended Project Idea", id: "recommended-project-idea" },
-  { name: "Materials Needed", id: "materials-needed" },
-  { name: "Step-by-Step", id: "step-by-step-method" },
-  { name: "Budget", id: "budget-breakdown" },
-  { name: "Alternate Ideas", id: "alternate-uses" },
+  { nameKey: "response.nav.overview", id: "overview" },
+  { nameKey: "response.nav.idea", id: "recommended-project-idea" },
+  { nameKey: "response.nav.materials", id: "materials-needed" },
+  { nameKey: "response.nav.steps", id: "step-by-step-method" },
+  { nameKey: "response.nav.budget", id: "budget-breakdown" },
+  { nameKey: "response.nav.alternate", id: "alternate-uses" },
 ];
 
 export const ResponseNavigation = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("overview");
+  const [scrollProgress, setScrollProgress] = useState(0);
   const navigate = useNavigate();
+  const { t } = useLanguage();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      setScrollProgress(progress);
+
+      // Update active section based on scroll position
+      const sections = sectionLinks.map(link => ({
+        id: link.id,
+        element: document.getElementById(link.id)
+      }));
+
+      for (let i = sections.length - 1; i >= 0; i--) {
+        const section = sections[i];
+        if (section.element) {
+          const rect = section.element.getBoundingClientRect();
+          if (rect.top <= 100) {
+            setActiveSection(section.id);
+            break;
+          }
+        }
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
@@ -28,87 +62,110 @@ export const ResponseNavigation = () => {
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          <Link to="/" className="flex items-center gap-2 group">
-            <div className="w-10 h-10 rounded-xl bg-gradient-primary flex items-center justify-center group-hover:animate-glow transition-all">
-              <Brain className="w-6 h-6 text-white" />
-            </div>
-            <span className="text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-              Fixit Mentor
-            </span>
-          </Link>
+    <>
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border">
+        {/* Progress Bar */}
+        <div className="absolute bottom-0 left-0 h-0.5 bg-gradient-primary transition-all duration-150" style={{ width: `${scrollProgress}%` }} />
+        
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <Link to="/" className="flex items-center gap-2 group">
+              <div className="w-10 h-10 rounded-xl bg-gradient-primary flex items-center justify-center group-hover:animate-glow transition-all">
+                <Brain className="w-6 h-6 text-white" />
+              </div>
+              <span className="text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent hidden sm:block">
+                Fixit Mentor
+              </span>
+            </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center gap-6">
-            {sectionLinks.map((link) => (
-              <button
-                key={link.id}
-                onClick={() => scrollToSection(link.id)}
-                className={cn(
-                  "text-sm font-medium transition-colors hover:text-primary relative whitespace-nowrap",
-                  activeSection === link.id
-                    ? "text-primary after:absolute after:bottom-[-8px] after:left-0 after:right-0 after:h-0.5 after:bg-gradient-primary"
-                    : "text-muted-foreground"
-                )}
-              >
-                {link.name}
-              </button>
-            ))}
-            <button
-              onClick={() => scrollToSection("safety-notes")}
-              className="whitespace-nowrap"
-            >
-              <Button size="sm" className="bg-gradient-primary text-white hover:opacity-90">
-                Safety
-              </Button>
-            </button>
-          </div>
-
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="lg:hidden p-2 rounded-lg hover:bg-secondary transition-colors"
-          >
-            {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
-        </div>
-
-        {/* Mobile Navigation */}
-        {isOpen && (
-          <div className="lg:hidden py-4 animate-fade-in">
-            <div className="flex flex-col gap-4">
+            {/* Desktop Navigation */}
+            <div className="hidden lg:flex items-center gap-4">
               {sectionLinks.map((link) => (
                 <button
                   key={link.id}
                   onClick={() => scrollToSection(link.id)}
                   className={cn(
-                    "text-sm font-medium transition-colors hover:text-primary px-2 py-1 text-left",
-                    activeSection === link.id ? "text-primary" : "text-muted-foreground"
+                    "text-xs font-medium transition-colors hover:text-primary relative whitespace-nowrap px-2 py-1",
+                    activeSection === link.id
+                      ? "text-primary after:absolute after:bottom-[-4px] after:left-0 after:right-0 after:h-0.5 after:bg-gradient-primary"
+                      : "text-muted-foreground"
                   )}
                 >
-                  {link.name}
+                  {t(link.nameKey)}
                 </button>
               ))}
-              <button onClick={() => scrollToSection("safety-notes")}>
-                <Button size="sm" className="w-full bg-gradient-primary text-white hover:opacity-90">
-                  Safety
+              <button
+                onClick={() => scrollToSection("safety-notes")}
+                className="whitespace-nowrap"
+              >
+                <Button size="sm" className="bg-gradient-primary text-white hover:opacity-90 text-xs px-3">
+                  {t('response.nav.safety')}
                 </Button>
               </button>
               <Button
                 size="sm"
-                variant="outline"
-                onClick={() => navigate("/system")}
-                className="w-full"
+                variant="ghost"
+                onClick={() => setSettingsOpen(true)}
+                className="ml-2"
               >
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Back to System
+                <Settings className="w-4 h-4" />
               </Button>
             </div>
+
+            {/* Mobile Menu Button */}
+            <div className="lg:hidden flex items-center gap-2">
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => setSettingsOpen(true)}
+              >
+                <Settings className="w-4 h-4" />
+              </Button>
+              <button
+                onClick={() => setIsOpen(!isOpen)}
+                className="p-2 rounded-lg hover:bg-secondary transition-colors"
+              >
+                {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              </button>
+            </div>
           </div>
-        )}
-      </div>
-    </nav>
+
+          {/* Mobile Navigation */}
+          {isOpen && (
+            <div className="lg:hidden py-4 animate-fade-in">
+              <div className="flex flex-col gap-3">
+                {sectionLinks.map((link) => (
+                  <button
+                    key={link.id}
+                    onClick={() => scrollToSection(link.id)}
+                    className={cn(
+                      "text-sm font-medium transition-colors hover:text-primary px-2 py-1 text-left",
+                      activeSection === link.id ? "text-primary" : "text-muted-foreground"
+                    )}
+                  >
+                    {t(link.nameKey)}
+                  </button>
+                ))}
+                <button onClick={() => scrollToSection("safety-notes")}>
+                  <Button size="sm" className="w-full bg-gradient-primary text-white hover:opacity-90">
+                    {t('response.nav.safety')}
+                  </Button>
+                </button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => navigate("/system")}
+                  className="w-full"
+                >
+                  <ArrowLeft className="w-4 h-4 mr-2" />
+                  {t('response.backButton')}
+                </Button>
+              </div>
+            </div>
+          )}
+        </div>
+      </nav>
+      <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
+    </>
   );
 };

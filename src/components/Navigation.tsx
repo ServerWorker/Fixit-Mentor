@@ -57,6 +57,13 @@ export const Navigation = () => {
                 {t('nav.startSolving')}
               </Button>
             </Link>
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={() => setSettingsOpen(true)}
+            >
+              <Settings className="w-4 h-4" />
+            </Button>
           </div>
 
           {/* Mobile Menu Button */}
