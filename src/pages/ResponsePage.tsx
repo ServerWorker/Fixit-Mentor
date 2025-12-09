@@ -104,40 +104,64 @@ export default function ResponsePage() {
           </div>
         </div>
 
-        {/* Single Card to Render Full Report */}
-        <Card className="p-6 sm:p-8 shadow-2xl bg-white border border-gray-200 animate-fade-in">
-          <div className="prose prose-slate dark:prose-invert max-w-none">
-            <ReactMarkdown
-              // Crucial plugin for tables and other Markdown extensions
-              remarkPlugins={[remarkGfm]} 
-              components={{
-                // Your custom components for styling are all kept here:
-                h1: ({ node, ...props }) => (
-                  <h1 className="text-3xl font-bold mb-4 text-foreground" {...props} />
-                ),
-                h2: ({ node, ...props }) => (
-                  <h2 className="text-2xl font-bold mt-6 mb-3 text-foreground border-b-2 border-primary/20 pb-2" {...props} />
-                ),
-                // ... all your other component overrides (h3, p, ul, table, etc.)
-                // NOTE: The Final Summary special styling should be done via a custom component if needed,
-                // but for simplicity, the standard markdown rendering is sufficient.
-                
-                // Example of a final summary block rendering correctly:
-                blockquote: ({ node, ...props }) => {
-                  // We can use the blockquote style you defined for the summary if Gemini wraps it in one
-                  return <blockquote className="border-l-4 border-primary/50 pl-4 italic text-muted-foreground my-4 p-4 bg-primary/10 rounded-lg" {...props} />;
-                },
-
-                // Keep the rest of your components (p, ul, table, etc.) here
-                
-                // ... (rest of the component overrides) ...
-
-              }}
-            >
-              {fullReport}
-            </ReactMarkdown>
-          </div>
-        </Card>
+        {/* Single Card to Render Full Report */}
+        <Card className="p-6 sm:p-8 shadow-2xl bg-card border border-border animate-fade-in">
+          <div className="prose prose-lg max-w-none">
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]} 
+              components={{
+                h1: ({ node, ...props }) => (
+                  <h1 className="text-3xl font-bold mb-6 text-foreground" {...props} />
+                ),
+                h2: ({ node, ...props }) => (
+                  <div className="mt-12 mb-6 pt-8 border-t-2 border-primary/30">
+                    <h2 className="text-2xl font-bold text-foreground" {...props} />
+                  </div>
+                ),
+                h3: ({ node, ...props }) => (
+                  <h3 className="text-xl font-semibold mt-6 mb-3 text-foreground" {...props} />
+                ),
+                p: ({ node, ...props }) => (
+                  <p className="text-foreground/90 leading-relaxed mb-4" {...props} />
+                ),
+                ul: ({ node, ...props }) => (
+                  <ul className="list-disc list-inside space-y-2 text-foreground/90 mb-4" {...props} />
+                ),
+                ol: ({ node, ...props }) => (
+                  <ol className="list-decimal list-inside space-y-2 text-foreground/90 mb-4" {...props} />
+                ),
+                li: ({ node, ...props }) => (
+                  <li className="text-foreground/90" {...props} />
+                ),
+                strong: ({ node, ...props }) => (
+                  <strong className="font-bold text-foreground" {...props} />
+                ),
+                table: ({ node, ...props }) => (
+                  <div className="overflow-x-auto my-6 rounded-lg border border-border">
+                    <table className="w-full border-collapse" {...props} />
+                  </div>
+                ),
+                thead: ({ node, ...props }) => (
+                  <thead className="bg-muted" {...props} />
+                ),
+                th: ({ node, ...props }) => (
+                  <th className="border border-border px-4 py-3 text-left font-semibold text-foreground" {...props} />
+                ),
+                td: ({ node, ...props }) => (
+                  <td className="border border-border px-4 py-3 text-foreground/90" {...props} />
+                ),
+                a: ({ node, ...props }) => (
+                  <a className="text-primary hover:underline" target="_blank" rel="noopener noreferrer" {...props} />
+                ),
+                blockquote: ({ node, ...props }) => (
+                  <blockquote className="border-l-4 border-primary/50 pl-4 italic text-muted-foreground my-6 p-4 bg-primary/10 rounded-lg" {...props} />
+                ),
+              }}
+            >
+              {fullReport}
+            </ReactMarkdown>
+          </div>
+        </Card>
 
         {/* Action Buttons */}
         <div className="mt-12 text-center space-y-4 animate-fade-in">
