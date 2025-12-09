@@ -11,39 +11,49 @@ import {
   Search,
   ArrowRight,
 } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function Dashboard() {
+  const { t } = useLanguage();
+  
   const categories = [
     {
       icon: Laptop,
-      title: "Electronic Waste",
-      desc: "Broken devices, repair or replace decisions",
+      title: t('dashboard.category1Title'),
+      desc: t('dashboard.category1Desc'),
       color: "from-blue-500 to-cyan-500",
     },
     {
       icon: GraduationCap,
-      title: "School Problems",
-      desc: "Study planning, project management, time optimization",
+      title: t('dashboard.category2Title'),
+      desc: t('dashboard.category2Desc'),
       color: "from-purple-500 to-pink-500",
     },
     {
       icon: Leaf,
-      title: "Climate / Environment",
-      desc: "Sustainability choices, eco-friendly solutions",
+      title: t('dashboard.category3Title'),
+      desc: t('dashboard.category3Desc'),
       color: "from-green-500 to-emerald-500",
     },
     {
       icon: Heart,
-      title: "Personal Issues",
-      desc: "Life decisions, relationships, health choices",
+      title: t('dashboard.category4Title'),
+      desc: t('dashboard.category4Desc'),
       color: "from-red-500 to-orange-500",
     },
     {
       icon: Lightbulb,
-      title: "Creative Build Ideas",
-      desc: "DIY projects, innovation, maker problems",
+      title: t('dashboard.category5Title'),
+      desc: t('dashboard.category5Desc'),
       color: "from-yellow-500 to-amber-500",
     },
+  ];
+
+  const examples = [
+    t('dashboard.example1'),
+    t('dashboard.example2'),
+    t('dashboard.example3'),
+    t('dashboard.example4'),
   ];
 
   return (
@@ -52,10 +62,10 @@ export default function Dashboard() {
         {/* Header */}
         <div className="text-center mb-12 animate-fade-in-up">
           <h1 className="text-4xl sm:text-5xl font-bold mb-4">
-            Problem <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Dashboard</span>
+            {t('dashboard.title')} <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">{t('dashboard.titleHighlight')}</span>
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Select a category or search for your specific problem to start the structured thinking process
+            {t('dashboard.subtitle')}
           </p>
         </div>
 
@@ -64,7 +74,7 @@ export default function Dashboard() {
           <div className="relative">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
             <Input
-              placeholder="Search your problem... (e.g., 'laptop won't turn on', 'need study schedule')"
+              placeholder={t('dashboard.searchPlaceholder')}
               className="pl-12 h-14 text-lg shadow-soft"
             />
           </div>
@@ -72,7 +82,7 @@ export default function Dashboard() {
 
         {/* Categories Grid */}
         <div className="mb-12">
-          <h2 className="text-2xl font-bold mb-6">Common Problem Categories</h2>
+          <h2 className="text-2xl font-bold mb-6">{t('dashboard.categoriesTitle')}</h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {categories.map((category, idx) => (
               <Card
@@ -95,21 +105,16 @@ export default function Dashboard() {
 
         {/* Quick Start Examples */}
         <div>
-          <h2 className="text-2xl font-bold mb-6">Quick Start Examples</h2>
+          <h2 className="text-2xl font-bold mb-6">{t('dashboard.quickStartTitle')}</h2>
           <div className="grid md:grid-cols-2 gap-4">
-            {[
-              "My laptop screen is cracked - should I repair or replace?",
-              "I need to organize my study schedule for 5 subjects",
-              "How can I reduce my carbon footprint on a budget?",
-              "I want to build a solar-powered phone charger",
-            ].map((example, idx) => (
+            {examples.map((example, idx) => (
               <Card
                 key={idx}
                 className="p-5 hover:shadow-soft transition-all hover:border-primary cursor-pointer group"
               >
                 <p className="text-sm mb-3 group-hover:text-primary transition-colors">{example}</p>
                 <div className="flex items-center gap-2 text-xs text-muted-foreground group-hover:text-primary transition-colors">
-                  <span>Start solving</span>
+                  <span>{t('dashboard.startSolving')}</span>
                   <ArrowRight className="w-3 h-3" />
                 </div>
               </Card>
@@ -121,7 +126,7 @@ export default function Dashboard() {
         <div className="mt-12 text-center">
           <Link to="/system">
             <Button size="lg" className="bg-gradient-primary text-white hover:opacity-90 shadow-medium">
-              Go to Main System <ArrowRight className="ml-2 w-5 h-5" />
+              {t('dashboard.goToSystem')} <ArrowRight className="ml-2 w-5 h-5" />
             </Button>
           </Link>
         </div>
