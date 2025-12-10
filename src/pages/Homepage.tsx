@@ -53,8 +53,8 @@ export default function Homepage() {
     <div className="min-h-screen">
       {/* Hero Section */}
       <section className="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 bg-gradient-subtle overflow-hidden">
-        {/* Spline 3D Orb Background - Hidden on mobile */}
-        <div className="absolute inset-0 hidden md:flex items-center justify-center opacity-40 pointer-events-none overflow-hidden">
+        {/* Spline 3D Orb Background - Hidden on mobile and tablet */}
+        <div className="absolute inset-0 hidden lg:flex items-center justify-center opacity-40 pointer-events-none overflow-hidden">
           <iframe 
             src='https://my.spline.design/orb-nRggrwiCPbiWf6wn548YA5Pt/' 
             frameBorder='0' 
